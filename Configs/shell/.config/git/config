@@ -1,0 +1,58 @@
+[user]
+	name = Conrad Hoang
+	email = tcmhoang@outlook.com
+	signingkey = 82773400787DE0154CF3D6C033E0FEF73529A630
+[ui "color"]
+	ui = always
+[color]
+	ui = true
+	status=auto
+	branch=auto
+	interactive=auto
+	diff=auto
+[core]
+	editor = nvim
+	autocrlf = input
+	safecrlf = true
+[commit]
+	gpgsign = true
+[merge]
+	tool = nvimdiff
+[alias]
+	c = commit
+	s = status
+	st = status
+	lg = log --oneline
+	last = log -1 HEAD
+	cl = log -p -- ':(exclude)Cargo.lock'
+	f = push --force-with-lease
+	# https://stackoverflow.com/a/11688523/472927
+	ss = "!f() { git stash show stash^{/$*} -p; }; f"
+	sa = "!f() { git stash apply stash^{/$*}; }; f"
+	sl = stash list
+[pull]
+	ff = only
+[push]
+	default = simple
+[help]
+	autocorrect = 1
+[url "git.launchpad.net"]
+	insteadOf = lp:
+[url "git@github.com:"]
+	insteadOf = gh:
+[github]
+	user = tcmhoang
+[diff]
+	algorithm = patience
+	compactionHeuristic = true
+[protocol]
+	version = 2
+[diff "odf"]
+	textconv = odt2txt
+[init]
+	defaultBranch = main
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process

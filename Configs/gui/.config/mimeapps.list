@@ -1,0 +1,17 @@
+application/pdf=okularApplication_pdf.desktop
+application/vnd.ms-xpsdocument=okularApplication_xps.desktop
+application/x-bibtex=nvim.desktop;
+application/xps=okularApplication_xps.desktop
+image/jpeg=org.kde.gwenview.desktop
+image/jpg=org.kde.gwenview.desktop
+image/png=org.kde.gwenview.desktop
+text/html=firefox.desktop
+text/plain=nvim.desktop;
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
+
+[Added Associations]
+text/plain=nvim.desktop;
+
+[Default Applications]
+text/plain=nvim.desktop;
