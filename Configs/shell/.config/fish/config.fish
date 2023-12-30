@@ -137,11 +137,11 @@ if command -v bat > /dev/null
 end
 
 if command -v eza > /dev/null
-	abbr -a l 'eza --icons'
-	abbr -a ls 'eza --icons'
-	abbr -a ll 'eza -l --icons'
-	abbr -a lll 'eza -la --icons'
-	abbr -a llg 'eza -la --git --icons'
+	abbr -a l 'eza --icons auto'
+	abbr -a ls 'eza --icons auto'
+	abbr -a ll 'eza -l --icons auto'
+	abbr -a lll 'eza -la --icons auto'
+	abbr -a llg 'eza -la --git --icons auto'
 else
 	abbr -a l 'ls'
 	abbr -a ll 'ls -l'
