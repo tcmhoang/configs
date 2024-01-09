@@ -49,10 +49,13 @@ Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 " Web stuffs
 Plug 'othree/html5.vim'
-Plug 'evanleck/vim-svelte'
+Plug 'leafOfTree/vim-svelte-plugin'
 Plug 'pangloss/vim-javascript'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'sbdchd/neoformat'
+
+" Vue
+Plug 'leafOfTree/vim-vue-plugin'
 
 " Color scheme
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
@@ -95,18 +98,29 @@ END
 " call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
 
 
-let g:svelte_preprocessor_tags = [
-  \ { 'name': 'ts', 'tag': 'script', 'as': 'typescript' }
-  \ ]
+
 
 " Format config
 let g:neoformat_try_node_exe = 1
 let g:neoformat_try_formatprg = 1
 
-autocmd BufWritePre *.css,*.svelte,*.scss,*.html,*.ts,*.tsx,*.js,*.json Neoformat
+autocmd BufWritePre *.css,*.svelte,*.vue,*.scss,*.html,*.ts,*.tsx,*.js,*.json Neoformat
 
+let g:vim_svelte_plugin_load_full_syntax = 1
 
-let g:svelte_preprocessors = ['ts']
+let g:vim_vue_plugin_config = { 
+      \'syntax': {
+      \   'template': ['html'],
+      \   'script': ['typescript', 'javascript'],
+      \   'style': ['scss', 'css'],
+      \},
+      \'full_syntax': ['json'],
+      \'initial_indent': [],
+      \'attribute': 0,
+      \'keyword': 0,
+      \'foldexpr': 0,
+      \'debug': 0,
+      \}
 
 " LSP configuration
 lua << END
@@ -272,35 +286,15 @@ lspconfig.gopls.setup {
    },
  }
 
-lspconfig.svelte.setup{
-  on_attach = on_attach,
-  capabilities = capabilities
-}
 
-
-lspconfig.jsonls.setup{
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-lspconfig.eslint.setup{
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-lspconfig.tsserver.setup{
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
-lspconfig.html.setup {
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
-lspconfig.cssls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
+-- LSP use default configs
+local servers = { 'tsserver', 'jsonls', 'eslint', 'svelte', 'html', 'cssls', 'vuels'}
+for _, lsp in pairs(servers) do
+  lspconfig[lsp].setup {
+    on_attach = on_attach,
+    capabilites = capabilities,
+  }
+end
 
 lspconfig.rust_analyzer.setup {
   on_attach = on_attach,
