@@ -43,8 +43,9 @@
 [github]
 	user = tcmhoang
 [diff]
-	algorithm = patience
-	compactionHeuristic = true
+	algorithm = histogram
+	indentHeuristic = true
+
 [protocol]
 	version = 2
 [diff "odf"]
