@@ -15,7 +15,7 @@
 # sudo_command = "sudo"
 
 # Disable specific steps - same options as the command line flag
-disable = ["spicetify"]
+disable = ["spicetify", "nix"]
 
 # Ignore failures for these steps
 # ignore_failures = ["powershell"]
@@ -143,7 +143,7 @@ disable = ["spicetify"]
 
 # rpm_ostree = false
 
-# nix_arguments = "--flake"
+nix_arguments = "--impure --flake"
 
 # nix_env_arguments = "--prebuilt-only"
 
@@ -152,13 +152,13 @@ home_manager_arguments = ["--flake", "pkgs/.#tcmhoang@tcmhoang"]
 
 
 [git]
-# max_concurrency = 5
+max_concurrency = 5
 
 # Git repositories that you want to pull and push
-# repos = [
-#     "~/src/*/",
-#     "~/.config/something"
-# ]
+repos = [
+     "~/repos/*/",
+     "~/.dotfiles/"
+ ]
 
 # Repositories that you only want to pull
 # pull_only_repos = [

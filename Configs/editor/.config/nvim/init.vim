@@ -104,9 +104,22 @@ END
 let g:neoformat_try_node_exe = 1
 let g:neoformat_try_formatprg = 1
 
-autocmd BufWritePre *.css,*.svelte,*.vue,*.scss,*.html,*.ts,*.tsx,*.js,*.json Neoformat
+" Haskell fmt
+let g:neoformat_enabled_haskell = ['sortimports', 'stylishhaskell']
+
+
+augroup fmt
+  autocmd!
+  autocmd BufWritePre * undojoin | Neoformat
+augroup END
+
+
+" Not keep dir buffer when using netrw
+let g:netrw_keepdir = 0
+
 
 let g:vim_svelte_plugin_load_full_syntax = 1
+let g:vim_svelte_plugin_use_sass = 1
 
 let g:vim_vue_plugin_config = { 
       \'syntax': {
@@ -251,7 +264,10 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format()<CR>", opts)
+  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
+  buf_set_keymap('n', '<space>cl', '<cmd>lua vim.lsp.codelens.run()<CR>', opts)
+
+
 
   -- None of this semantics tokens business.
   -- https://www.reddit.com/r/neovim/comments/143efmd/is_it_possible_to_disable_treesitter_completely/
