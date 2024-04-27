@@ -165,6 +165,10 @@ function ssh
     end
 end
 
+function pwl
+    set -Ux OP_SESSION_my (pw signin my --raw)
+end
+
 function apass
     if test (count $argv) -ne 1
         pass $argv
