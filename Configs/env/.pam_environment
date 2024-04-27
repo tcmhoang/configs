@@ -12,16 +12,20 @@
 
 EDITOR=nvim
 BROWSER=firefox
-NAME DEFAULT="Conrad Hoang"
-EMAIL=tcmhoang@outlook.com
+NAME="Conrad Hoang"
+EMAIL=conrad@sqrpt.com
 
-PATH DEFAULT=${PATH}:@{HOME}/bin
-PATH DEFAULT=${PATH}:@{HOME}/.nix-profile/bin
-PATH DEFAULT=${PATH}:@{HOME}/.local/bin
+PATH DEFAULT=${PATH}:@{HOME}/bin:@{HOME}/.nix-profile/bin:@{HOME}/.local/bin
 
+# Configs
+R_LIBS_USER=@{HOME}/.Rpackages
+RUST_BACKTRACE=1
 # Globals
 # KDE
 # TZ=US/New_York
+
+# Java stuff
+_JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=lcd -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
 
 TERM=screen-256color-bce
 
