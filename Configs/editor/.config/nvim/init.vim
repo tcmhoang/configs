@@ -206,7 +206,6 @@ native_lsp = {
 
 local cmp = require'cmp'
 
-local lspconfig = require'lspconfig'
 cmp.setup({
   snippet = {
     -- REQUIRED by nvim-cmp. get rid of it once we can
@@ -240,47 +239,7 @@ cmp.setup.cmdline(':', {
 })
 
 -- Setup lspconfig.
-local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  --Enable completion triggered by <c-x><c-o>
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  local opts = { noremap=true, silent=true }
-
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.format()<CR>', opts)
-  buf_set_keymap('n', '<space>cl', '<cmd>lua vim.lsp.codelens.run()<CR>', opts)
-
-
-
-  -- None of this semantics tokens business.
-  -- https://www.reddit.com/r/neovim/comments/143efmd/is_it_possible_to_disable_treesitter_completely/
-  client.server_capabilities.semanticTokensProvider = nil
-
-  -- Get signatures (and _only_ signatures) when in argument lists.
-  require "lsp_signature".on_attach({
-    doc_lines = 0,
-    handler_opts = {
-      border = "none"
-    },
-  })
-end
+local lspconfig = require'lspconfig'
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -288,7 +247,6 @@ util = require "lspconfig/util"
 
 lspconfig.gopls.setup {
    cmd = {"gopls", "serve"},
-   on_attach = on_attach,
    capabilities = capabilities,
    filetypes = {"go", "gomod"},
    root_dir = util.root_pattern("go.work", "go.mod", ".git"),
@@ -307,13 +265,11 @@ lspconfig.gopls.setup {
 local servers = { 'tsserver', 'jsonls', 'eslint', 'svelte', 'html', 'cssls', 'vuels'}
 for _, lsp in pairs(servers) do
   lspconfig[lsp].setup {
-    on_attach = on_attach,
     capabilites = capabilities,
   }
 end
 
 lspconfig.rust_analyzer.setup {
-  on_attach = on_attach,
   flags = {
     debounce_text_changes = 150,
   },
@@ -321,6 +277,11 @@ lspconfig.rust_analyzer.setup {
     ["rust-analyzer"] = {
       cargo = {
         allFeatures = true,
+      },
+      imports = {
+        group = {
+          enable = false,
+        },
       },
       completion = {
 	postfix = {
@@ -339,10 +300,73 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = true,
   }
 )
-END
 
-" Enable type inlay hints
-autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
+-- Global Mapping
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+  --Enable completion triggered by <c-x><c-o>
+  vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+  -- Local Mappings.
+
+  local opts = { noremap=true, silent=true, buffer = ev.buf }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+  vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
+  vim.keymap.set('n', '<space>a', vim.lsp.buf.code_action, opts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  vim.keymap.set('n', '<space>cl', vim.lsp.codelens.run, opts)
+  vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+
+  -- workspace
+  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+  vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, opts)
+
+  
+
+  local client = vim.lsp.get_client_by_id(ev.data.client_id)
+
+    -- When https://neovim.io/doc/user/lsp.html#lsp-inlay_hint stabilizes
+    -- *and* there's some way to make it only apply to the current line.
+    -- if client.server_capabilities.inlayHintProvider then
+    --    vim.lsp.inlay_hint.enable(true, ev.buf)
+    -- end
+
+  -- None of this semantics tokens business.
+  -- https://www.reddit.com/r/neovim/comments/143efmd/is_it_possible_to_disable_treesitter_completely/
+  client.server_capabilities.semanticTokensProvider = nil
+
+  -- Get signatures (and _only_ signatures) when in argument lists.
+  require "lsp_signature".on_attach({
+    doc_lines = 0,
+    handler_opts = {
+      border = "none"
+    },
+  })
+end,
+})
+
+END
 
 " Plugin settings
 let g:secure_modelines_allowed_items = [
@@ -425,6 +449,8 @@ let g:go_play_open_browser = 0
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
 let g:go_bin_path = expand("~/dev/go/bin")
+
+
 
 " =============================================================================
 " # Editor settings
