@@ -246,22 +246,23 @@ setenv FZF_DEFAULT_OPTS "--height 20% \
 
 setenv EDITOR nvim
 
-
-setenv OS_USERNAME jfrg@csail.mit.edu
-setenv OS_TENANT_NAME usersandbox_jfrg
-setenv OS_AUTH_URL https://nimbus.csail.mit.edu:5001/v2.0
-setenv OS_IMAGE_API_VERSION 1
-setenv OS_VOLUME_API_VERSION 2
-function penv -d "Set up environment for the PDOS openstack service"
-    env OS_PASSWORD=(pass www/mit-openstack | head -n1) OS_TENANT_NAME=pdos OS_PROJECT_NAME=pdos $argv
-end
-
+alias todoist-cli=todoist
 function fish_user_key_bindings
     bind \cz 'fg>/dev/null ^/dev/null'
     if functions -q fzf_key_bindings
         fzf_key_bindings
     end
+
+    bind \eti fzf_todoist_item
+    bind \etp fzf_todoist_project
+    bind \etl fzf_todoist_labels
+    bind \etc fzf_todoist_close
+    bind \etd fzf_todoist_delete
+    bind \eto fzf_todoist_open
+    bind \ett fzf_todoist_date
+    bind \etq fzf_todoist_quick_add
 end
+
 
 
 function fish_greeting
