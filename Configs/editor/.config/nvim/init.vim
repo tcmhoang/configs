@@ -77,6 +77,9 @@ if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
   set termguicolors
 endif
 
+"spell
+set spell spelllang=en_us
+
 "colorscheme quiet
 syntax on
 hi Normal ctermbg=NONE
