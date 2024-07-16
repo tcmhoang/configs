@@ -15,7 +15,7 @@
 # sudo_command = "sudo"
 
 # Disable specific steps - same options as the command line flag
-disable = ["spicetify", "nix"]
+disable = ["spicetify"]
 
 # Ignore failures for these steps
 # ignore_failures = ["powershell"]
@@ -148,7 +148,7 @@ nix_arguments = "--impure --flake"
 # nix_env_arguments = "--prebuilt-only"
 
 # Extra Home Manager arguments
-home_manager_arguments = ["--flake", "pkgs/.#tcmhoang@tcmhoang"]
+home_manager_arguments = ["switch"]
 
 
 [git]
