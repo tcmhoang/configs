@@ -237,6 +237,9 @@ setenv LESS_TERMCAP_so \e'[38;5;246m' # begin standout-mode - info box
 setenv LESS_TERMCAP_ue \e'[0m' # end underline
 setenv LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline
 
+setenv MANPAGER "sh -c 'col -bx | bat -l man -p'"
+setenv MANROFFOPT -c
+
 setenv FZF_DEFAULT_COMMAND 'fd --type file --follow'
 setenv FZF_CTRL_T_COMMAND 'fd --type file --follow'
 setenv FZF_DEFAULT_OPTS "--height 20% \
