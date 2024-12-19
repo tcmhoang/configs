@@ -44,10 +44,9 @@
                 allowUnfreePredicate = true;
               };
             };
-            
-                      }
+          }
 
-	./home.nix
+          ./home.nix
         ];
       };
     };
