@@ -14,10 +14,23 @@
 	editor = nvim
 	autocrlf = input
 	safecrlf = true
+	pager = delta
+[interactive]
+    diffFilter = delta --color-only
+
+[include]
+	path = /home/tcmhoang/customizer/delta/catppuccin.gitconfig
+[delta]
+	features = catppuccin-mocha
+	navigate = true
+	side-by-side = true
+	line-numbers-left-format = ""
+	line-numbers-right-format = "│ "
 [commit]
 	gpgsign = true
 [merge]
 	tool = nvimdiff
+	conflictstyle = diff3
 [alias]
 	c = commit
 	s = status
@@ -45,6 +58,7 @@
 [diff]
 	algorithm = histogram
 	indentHeuristic = true
+	colorMoved = default
 
 [protocol]
 	version = 2
