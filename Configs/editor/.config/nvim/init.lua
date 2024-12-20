@@ -729,10 +729,6 @@ require("lazy").setup({
 		ft = { "js" },
 	},
 	{
-		'othree/html5.vim',
-		ft = { "html" },
-	},
-	{
 		'HerringtonDarkholme/yats.vim',
 		ft = { "ts" },
 	},
