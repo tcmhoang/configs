@@ -58,8 +58,8 @@ vim.opt.splitbelow = true
 -- infinite undo!
 -- NOTE: ends up in ~/.local/state/nvim/undo/
 vim.opt.undofile = true
-vim.opt.undodir = '~/.vimdid'
---" Wild menu
+vim.opt.undodir =  (vim.fn.escape(vim.fn.expand("$HOME"), '\\') .. '/.vimdid/')
+-- Wild menu
 -- in completion, when there is more than one match,
 -- list all matches, and only complete to longest common match
 vim.opt.wildmode = 'list:longest'
@@ -417,6 +417,15 @@ require("lazy").setup({
 			vim.api.nvim_create_user_command('Files', function(arg)
 				vim.fn['fzf#vim#files'](arg.qargs, { source = list_cmd(), options = '--tiebreak=index' }, arg.bang)
 			end, { bang = true, nargs = '?', complete = "dir" })
+
+			vim.api.nvim_create_user_command('Rg', function(arg)
+			  	local preview_window = arg.bang and 'up:60%' or 'right:50%:hidden'
+			  	local source = string.format(
+			  	    'rg --column --line-number --no-heading --color=always %s',
+			  	    vim.fn.shellescape(arg.args)
+			  	)
+			  	vim.fn['fzf#vim#grep'](source, vim.fn['fzf#vim#with_preview'](preview_window), arg.bang)
+			end, { nargs = '*', bang = true })
 		end
 	},
 	-- LSP
@@ -508,27 +517,7 @@ require("lazy").setup({
 			})
 
 			-- Custom mapping
-			vim.api.nvim_create_user_command('Rg', function(opts)
-			  local args = opts.args
-			  local preview_window = opts.bang and 'up:60%' or 'right:50%:hidden'
-			  
-			  require('fzf').run({
-			    source = string.format(
-			      'rg --column --line-number --no-heading --color=always %s',
-			      vim.fn.shellescape(args)
-			    ),
-			    options = {
-			      '--ansi',
-			      '--preview', preview_window,
-			      '?'
-			    },
-			    window = {
-			      height = 0.2
-			    }
-			  })
-			end, { nargs = '*', bang = true })
-
-			vim.keymap.set('n', '<leader>s', ':Rg<CR>', { noremap = true, silent = true })
+			vim.keymap.set('n', '<leader>s', ':Rg', { noremap = true, silent = true })
 			vim.keymap.set('n', '<leader>q', 'g<c-g>', { noremap = true, silent = true })
 
 		
@@ -652,7 +641,10 @@ require("lazy").setup({
 		ft = { "svelte" },
 	},
 	-- toml
-	'cespare/vim-toml',
+	{
+	 	'cespare/vim-toml',
+		ft = { "toml" },
+	},
 	-- yaml
 	{
 		"cuducos/yaml.nvim",
@@ -683,7 +675,10 @@ require("lazy").setup({
 	},
 
 	-- fish
-	'khaveesh/vim-fish-syntax',
+	{
+		'khaveesh/vim-fish-syntax',
+		ft = { "fish" },
+	},
 	-- markdown
 	{
 		'plasticboy/vim-markdown',
