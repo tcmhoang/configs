@@ -112,6 +112,7 @@ abbr -a ks 'keybase chat send'
 abbr -a kr 'keybase chat read'
 abbr -a kl 'keybase chat list'
 abbr -a pr 'gh pr create -t (git show -s --format=%s HEAD) -b (git show -s --format=%B HEAD | tail -n+3)'
+abbr -a rm 'rm -I'
 abbr --erase z &>/dev/null
 alias z=__zoxide_z
 abbr --erase zi &>/dev/null
