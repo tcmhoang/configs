@@ -1,6 +1,8 @@
 {
   config,
   pkgs,
+  osConfig,
+  nixgl,
   ...
 }: {
   home = {
@@ -9,6 +11,7 @@
     sessionVariables = {
       EDITOR = "nvim";
     };
+    enableNixpkgsReleaseCheck = false;
 
     packages = with pkgs; [
       hblock
@@ -59,7 +62,7 @@
       hunspell
       hunspellDicts.en_US
     ];
-    stateVersion = "24.11";
+    stateVersion = "25.05";
   };
 
   systemd.user.startServices = "sd-switch";
