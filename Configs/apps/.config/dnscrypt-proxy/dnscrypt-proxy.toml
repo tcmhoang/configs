@@ -1,0 +1,66 @@
+# Empty listen_addresses to use systemd socket activation
+listen_addresses = ['127.0.0.1:53', '[::1]:53']
+
+ipv6_servers = false
+block_ipv6 = true
+dnscrypt_servers = true 
+doh_servers = false
+odoh_servers = false
+require_dnssec = false
+require_nolog = true
+require_nofilter = true
+server_names = []
+disabled_server_names = ['dnscry.pt-tokyo-ipv4', 'dnscry.pt-tokyo-ipv6', 'dnscry.pt-tokyo02-ipv4', 'dnscry.pt-tokyo02-ipv6', 'iij', 'saldns01-conoha-ipv4', 'saldns02-conoha-ipv4', 'saldns03-conoha-ipv4','cs-tokyo', 'dnscry.pt-hongkong-ipv4', 'dnscry.pt-hongkong-ipv6', 'cs-sydney']
+
+cache=true
+cache_size = 4096
+cache_min_ttl = 2400
+cache_max_ttl = 86400
+cache_neg_min_ttl = 60
+cache_neg_max_ttl = 600
+
+[query_log]
+  file = '/var/log/dnscrypt-proxy/query.log'
+
+[nx_log]
+  file = '/var/log/dnscrypt-proxy/nx.log'
+
+[blocked_names]
+  blocked_names_file = 'blocked.txt'
+
+[sources]
+  [sources.'public-resolvers']
+    urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/relays.md' , 'https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md']
+  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+  cache_file = 'public-resolvers.md' 
+
+  [sources.'odoh-servers']
+  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/odoh-servers.md' , 'https://download.dnscrypt.info/resolvers-list/v3/odoh-servers.md']
+  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+  cache_file = 'odoh-servers.md'
+
+  [sources.'odoh-relays']
+  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/odoh-relays.md' , 'https://download.dnscrypt.info/resolvers-list/v3/odoh-relays.md']
+  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+  cache_file = 'odoh-relays.md'
+
+  [sources.'relays']
+  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/relays.md' , 'https://download.dnscrypt.info/dnscrypt-resolvers/v3/relays.md']
+  cache_file = 'relays.md'
+  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+  refresh_delay = 72
+  prefix = ''
+
+  [sources.'opennic']
+  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/opennic.md', 'https://download.dnscrypt.info/resolvers-list/v3/opennic.md']
+  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+  cache_file = 'opennic.md'
+
+[anonymized_dns]
+
+routes = [
+   { server_name='*', via=['anon-cs-tokyo', 'anon-saldns01-conoha-ipv4', 'anon-saldns02-conoha-ipv4', 'anon-saldns03-conoha-ipv4', 'anon-saldns99-conoha-ipv4', 'dnscry.pt-anon-tokyo02-ipv4', 'dnscry.pt-anon-tokyo02-ipv6', 'dnscry.pt-anon-hongkong-ipv4', 'dnscry.pt-anon-hongkong-ipv6', 'anon-cs-sydney' ] }
+]
+
+skip_incompatible = true
+
