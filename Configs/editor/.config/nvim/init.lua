@@ -475,13 +475,35 @@ require("lazy").setup({
 			   },
 			 }
 
+			-- deno config
+			
+			lspconfig.denols.setup {
+			  root_dir = util.root_pattern("deno.json", "deno.jsonc"),
+			  capabilites = capabilities,
+			  filetypes = { "javascript",  "typescript" }
+			}
+			
+			lspconfig.ts_ls.setup {
+			  root_dir = function (filename)
+			   local denoRootDir = util.root_pattern("deno.json", "deno.json")(filename);
+			      if denoRootDir then
+ 			        return nil;
+ 			      end
+ 			    return lspconfig.util.root_pattern("package.json")(filename);
+ 			  end,
+			  single_file_support = false,
+			  capabilites = capabilities,
+			}
+
+
 			-- Other stuffs
-			local servers = { 'ts_ls', 'jsonls', 'eslint', 'svelte', 'html', 'cssls', 'vuels'}
+			local servers = {'jsonls', 'eslint', 'svelte', 'html', 'cssls', 'vuels'}
 			for _, lsp in pairs(servers) do
 			  lspconfig[lsp].setup {
 			    capabilites = capabilities,
 			  }
 			end
+
 
 		
 			-- Bash LSP
@@ -491,7 +513,7 @@ require("lazy").setup({
 					default_config = {
 						cmd = { 'bash-language-server', 'start' },
 						filetypes = { 'sh' },
-						root_dir = require('lspconfig').util.find_git_ancestor,
+						root_dir = util.find_git_ancestor,
 						init_options = {
 							settings = {
 								args = {}
@@ -713,30 +735,15 @@ require("lazy").setup({
 			  group = 'fmt',
 			  pattern = '*',
 			  callback = function()
-			    vim.cmd('undojoin | Neoformat')
+			    if undo_history and #undo_history <= 1 then 
+			      vim.cmd('undojoin') 
+   			    end
+			    vim.cmd('Neoformat')
 			  end,
 			})
 
 		end
 	},
-	-- Web stuffs
-	{
-		'othree/html5.vim',
-		ft = { "html" },
-	},
-	{
-		'pangloss/vim-javascript',
-		ft = { "js" },
-	},
-	{
-		'HerringtonDarkholme/yats.vim',
-		ft = { "ts" },
-	},
-
-
-
-
-
 })
 
 
