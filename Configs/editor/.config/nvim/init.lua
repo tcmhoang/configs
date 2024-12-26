@@ -497,7 +497,7 @@ require("lazy").setup({
 
 
 			-- Other stuffs
-			local servers = {'jsonls', 'eslint', 'svelte', 'html', 'cssls', 'vuels'}
+			local servers = {'jsonls', 'eslint', 'svelte', 'html', 'cssls', 'vuels', 'astro'}
 			for _, lsp in pairs(servers) do
 			  lspconfig[lsp].setup {
 			    capabilites = capabilities,
@@ -656,11 +656,6 @@ require("lazy").setup({
 	{
 		'hashivim/vim-terraform',
 		ft = { "terraform" },
-	},
-	-- svelte
-	{
-		'evanleck/vim-svelte',
-		ft = { "svelte" },
 	},
 	-- toml
 	{
