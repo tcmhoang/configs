@@ -483,21 +483,23 @@ require("lazy").setup({
 			  filetypes = { "javascript",  "typescript" }
 			}
 			
-			lspconfig.ts_ls.setup {
-			  root_dir = function (filename)
-			   local denoRootDir = util.root_pattern("deno.json", "deno.json")(filename);
-			      if denoRootDir then
- 			        return nil;
- 			      end
- 			    return lspconfig.util.root_pattern("package.json")(filename);
- 			  end,
-			  single_file_support = false,
-			  capabilites = capabilities,
-			}
+
+			for _, lsp in pairs({'ts_ls', 'eslint'}) do
+			  lspconfig[lsp].setup {
+			    root_dir = function (filename)
+			     local denoRootDir = util.root_pattern("deno.json", "deno.json")(filename);
+			        if denoRootDir then
+ 			          return nil;
+ 			        end
+ 			      return lspconfig.util.root_pattern("package.json")(filename);
+ 			    end,
+			    capabilites = capabilities,
+			  }
+			end
 
 
 			-- Other stuffs
-			local servers = {'jsonls', 'eslint', 'svelte', 'html', 'cssls', 'vuels', 'astro'}
+			local servers = {'jsonls', 'svelte', 'html', 'cssls', 'vuels', 'astro'}
 			for _, lsp in pairs(servers) do
 			  lspconfig[lsp].setup {
 			    capabilites = capabilities,
