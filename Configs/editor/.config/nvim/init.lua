@@ -480,7 +480,7 @@ require("lazy").setup({
 			lspconfig.denols.setup {
 			  root_dir = util.root_pattern("deno.json", "deno.jsonc"),
 			  capabilites = capabilities,
-			  filetypes = { "javascript",  "typescript" }
+			  filetypes = { "javascript",  "typescript", 'svelte', 'astro' }
 			}
 			
 
@@ -741,6 +741,22 @@ require("lazy").setup({
 
 		end
 	},
+	-- svelte
+	{
+		'leafOfTree/vim-svelte-plugin',
+		ft = { "svelte" },
+		config = function()
+			vim.g.vim_svelte_plugin_use_sass = 1
+		end
+	},
+	-- astro
+	{
+		'wuelnerdotexe/vim-astro',
+		ft = { "astro" },
+	},
+
+
+
 })
 
 
