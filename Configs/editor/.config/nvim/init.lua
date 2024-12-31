@@ -480,7 +480,7 @@ require("lazy").setup({
 			lspconfig.denols.setup {
 			  root_dir = util.root_pattern("deno.json", "deno.jsonc"),
 			  capabilites = capabilities,
-			  filetypes = { "javascript",  "typescript", 'svelte', 'astro' }
+			  filetypes = { "javascript",  "typescript"}
 			}
 			
 
