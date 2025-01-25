@@ -48,7 +48,7 @@
 [push]
 	default = simple
 [help]
-	autocorrect = 1
+	autocorrect = prompt
 [url "git.launchpad.net"]
 	insteadOf = lp:
 [url "git@github.com:"]
