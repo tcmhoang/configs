@@ -133,8 +133,13 @@ set -g direnv_fish_mode disable_arrow # trigger direnv at prompt only, this is s
 
 
 if status --is-interactive
-    if ! set -q TMUX
-        exec tmux
+    switch $TERM
+        case linux
+            :
+        case '*'
+            if ! set -q TMUX
+                exec tmux
+            end
     end
 end
 
