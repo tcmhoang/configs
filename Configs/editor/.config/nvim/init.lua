@@ -499,7 +499,19 @@ require("lazy").setup({
 
 
 			-- Other stuffs
-			local servers = {'jsonls', 'svelte', 'html', 'cssls', 'vuels', 'astro'}
+	
+			lspconfig.astro.setup {
+			  capabilites = capabilities,
+			   init_options = {
+			    typescript = {
+			      tsdk = vim.fs.normalize('node_modules/typescript/lib')
+			    }
+			  },
+			}
+			
+
+
+			local servers = {'jsonls', 'svelte', 'html', 'cssls', 'vuels'}
 			for _, lsp in pairs(servers) do
 			  lspconfig[lsp].setup {
 			    capabilites = capabilities,
