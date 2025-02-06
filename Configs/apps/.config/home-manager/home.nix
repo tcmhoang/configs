@@ -22,6 +22,7 @@
       spicetify-cli
       spotify
       signal-desktop
+      materialgram
       slack
       aria
       fish
