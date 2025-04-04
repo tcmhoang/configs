@@ -554,6 +554,34 @@ require("lazy").setup({
 				lspconfig.ruff.setup {}
 			end
 
+			if not configs.pyright and vim.fn.executable('pyright') == 1 then
+				configs.pyright = {
+					default_config = {
+						cmd = { 'pyright-langserver', "--stdio" },
+						filetypes = { 'python' },
+						root_dir = util.find_git_ancestor,
+						settings = {
+							settings = {
+								pyright = {
+								   -- Using Ruff's import organizer
+   								   disableOrganizeImports = true,
+   								 },
+   								 python = {
+   								   analysis = {
+   								     -- Ignore all files for analysis to exclusively use Ruff for linting
+   								     ignore = { '*' },
+   								   },
+   								 },
+							}
+						}
+					}
+				}
+			end
+			if configs.pyright then
+				lspconfig.pyright.setup {}
+			end
+
+
 			-- Global mappings.
 			-- See `:help vim.diagnostic.*` for documentation on any of the below functions
 			vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
