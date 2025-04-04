@@ -522,29 +522,24 @@ require("lazy").setup({
 		
 			-- Bash LSP
 			local configs = require 'lspconfig.configs'
-			if not configs.bash_lsp and vim.fn.executable('bash-language-server') == 1 then
-				configs.bash_lsp = {
+			if not configs.bashls and vim.fn.executable('bash-language-server') == 1 then
+				configs.bashls = {
 					default_config = {
 						cmd = { 'bash-language-server', 'start' },
 						filetypes = { 'sh' },
 						root_dir = util.find_git_ancestor,
-						init_options = {
-							settings = {
-								args = {}
-							}
-						}
 					}
 				}
 			end
-			if configs.bash_lsp then
-				lspconfig.bash_lsp.setup {}
+			if configs.bashls then
+				lspconfig.bashls.setup {}
 			end
 
 			-- Ruff for Python
 			if not configs.ruff and vim.fn.executable('ruff') == 1 then
 				configs.ruff = {
 					default_config = {
-						cmd = { 'ruff' },
+						cmd = { 'ruff', "server" },
 						filetypes = { 'python' },
 						root_dir = util.find_git_ancestor,
 						init_options = {
