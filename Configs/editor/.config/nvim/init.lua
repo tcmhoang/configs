@@ -56,7 +56,7 @@ vim.opt.number = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 -- infinite undo!
--- NOTE: ends up in ~/.local/state/nvim/undo/
+-- NOTE: ends up in ~/.local/state/nvim/undo/ if not set undodir
 vim.opt.undofile = true
 vim.opt.undodir =  (vim.fn.escape(vim.fn.expand("$HOME"), '\\') .. '/.vimdid/')
 -- Wild menu
@@ -541,11 +541,10 @@ require("lazy").setup({
 			end
 
 			-- Ruff for Python
-			local configs = require 'lspconfig.configs'
-			if not configs.ruff_lsp and vim.fn.executable('ruff-lsp') == 1 then
-				configs.ruff_lsp = {
+			if not configs.ruff and vim.fn.executable('ruff') == 1 then
+				configs.ruff = {
 					default_config = {
-						cmd = { 'ruff-lsp' },
+						cmd = { 'ruff' },
 						filetypes = { 'python' },
 						root_dir = util.find_git_ancestor,
 						init_options = {
@@ -556,8 +555,8 @@ require("lazy").setup({
 					}
 				}
 			end
-			if configs.ruff_lsp then
-				lspconfig.ruff_lsp.setup {}
+			if configs.ruff then
+				lspconfig.ruff.setup {}
 			end
 
 			-- Global mappings.
