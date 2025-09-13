@@ -11,24 +11,13 @@
     sessionVariables = {
       EDITOR = "nvim";
     };
+
     enableNixpkgsReleaseCheck = false;
 
     packages = with pkgs; [
-      hblock
-      odt2txt
-      gh
-      gh-dash
-      keybase
-      spicetify-cli
-      spotify
-      signal-desktop
-      materialgram
-      slack
-      aria
       fish
+      hblock
       todoist
-      livecaptions
-
       e2fsprogs
       uutils-coreutils-noprefix
       delta
@@ -47,18 +36,38 @@
       fd
       eza
       license-generator
-      git-ignore
       topgrade
       feh
       proximity-sort
-      git
-      git-lfs
       tuckr
-      qbittorrent
+      cloudflare-warp
 
-      xclip
+      spicetify-cli
+      spotify
+      signal-desktop
+      element-desktop
+      qbittorrent
+      livecaptions
+      kando
+
+      emacs
+      neovim
+
+      jetbrains.idea-community-bin
+
+      qemu
+      virtiofsd
+      podman-compose
+
+      git
+      git-ignore
+      git-lfs
+      gh
+      gh-dash
+      odt2txt
+
       fusuma
-      xdotool
+      ydotool
 
       hunspell
       hunspellDicts.en_US
@@ -67,7 +76,8 @@
   };
 
   systemd.user.startServices = "sd-switch";
-  services.fusuma.extraPackages = with pkgs; [coreutils xdotool];
+  services.podman.enable = true;
+  services.fusuma.extraPackages = with pkgs; [coreutils ydotool];
 
   programs.home-manager.enable = true;
 }
