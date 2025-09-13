@@ -101,10 +101,6 @@ vim.api.nvim_set_hl(0, 'Normal', { ctermbg = 'NONE' })
 -- hotkeys
 --
 -------------------------------------------------------------------------------
--- quick-open
-vim.keymap.set('', '<C-p>', '<cmd>Files<cr>')
--- search buffers
-vim.keymap.set('n', '<leader>;', '<cmd>Buffers<cr>')
 -- quick-save
 vim.keymap.set('n', '<leader>w', '<cmd>w<cr>')
 -- make missing : less annoying
@@ -174,6 +170,9 @@ vim.keymap.set('n', 'k', 'gk')
 -- handy key map for replacing up to next _ (like in variable names)
 vim.keymap.set('n', '<leader>m', 'ct_')
 
+
+-- Allow virtual text
+vim.diagnostic.config({ virtual_text = true, virtual_lines = false })
 
 -------------------------------------------------------------------------------
 --
@@ -318,7 +317,9 @@ require("lazy").setup({
 			    },
 			})
 
-			-- Normal ctermbg=NONE
+			vim.cmd([[hi Normal ctermbg=NONE]])
+			-- Less visible window separator
+			vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#9399b2" })
 			-- Make it clearly visible which argument we're at.
 			local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
 			vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, bold = true })
@@ -390,34 +391,93 @@ require("lazy").setup({
 			require('nvim-rooter').setup()
 		end
 	},
-	-- fzf support for ^p
+	-- center the editor
 	{
-		'junegunn/fzf.vim',
-		dependencies = {
-			{ 'junegunn/fzf', dir = '~/.fzf', build = './install --all' },
+		"shortcuts/no-neck-pain.nvim",
+		version = "*",
+		opts = {
+			mappings = {
+				enabled = true,
+				toggleLeftSide = false,
+				toggleRightSide = false,
+				widthUp = false,
+				widthDown = false,
+				scratchPad = false,
+			}
 		},
 		config = function()
+			vim.keymap.set('', '<leader>t', function()
+				vim.cmd([[
+					:NoNeckPain
+					:set formatoptions-=tc linebreak tw=0 cc=0 wrap wm=20 noautoindent nocindent nosmartindent indentkeys=
+				]])
+				-- make 0, ^ and $ behave better in wrapped text
+				vim.keymap.set('n', '0', 'g0')
+				vim.keymap.set('n', '$', 'g$')
+				vim.keymap.set('n', '^', 'g^')
+			end)
+		end
+	},
+	-- fzf support for ^p
+	{
+		'ibhagwan/fzf-lua',
+		config = function()
 			-- stop putting a giant window over my editor
-			vim.g.fzf_layout = { down = '~20%' }
-			-- when using :Files, pass the file list through
-			--
-			--   https://github.com/jonhoo/proximity-sort
-			--
-			-- to prefer files closer to the current file.
-			function list_cmd()
+			require("fzf-lua").setup{
+				winopts = {
+					split = "belowright 10new",
+					preview = {
+						hidden = true,
+					}
+				},
+				files = {
+					file_icons = false,
+					git_icons = true,
+					_fzf_nth_devicons = true,
+				},
+				buffers = {
+					file_icons = false,
+					git_icons = true,
+					_fzf_nth_devicons = true,
+				},
+				fzf_opts = {
+					  ["--with-nth"]      = "{-2}",
+					  ["--delimiter"]     = "[ :]",
+					  ["--header-lines"]  = "false",
+
+					},
+				header = false,
+			}
+			vim.keymap.set('', '<C-p>', function()
+				opts = {}
+				opts.cmd = 'fd --color=never --hidden --type f --type l --exclude .git'
 				local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
-				if base == '.' then
+				if base ~= '.' then
 					-- if there is no current file,
 					-- proximity-sort can't do its thing
-					return 'fd --hidden --type file --follow'
-				else
-					return vim.fn.printf('fd --hidden --type file --follow | proximity-sort %s', vim.fn.shellescape(vim.fn.expand('%')))
-				end
-			end
-			vim.api.nvim_create_user_command('Files', function(arg)
-				vim.fn['fzf#vim#files'](arg.qargs, { source = list_cmd(), options = '--scheme=path --tiebreak=index' }, arg.bang)
-			end, { bang = true, nargs = '?', complete = "dir" })
+					opts.cmd = opts.cmd .. (" | proximity-sort %s"):format(vim.fn.shellescape(vim.fn.expand('%')))
 
+
+				end
+				opts.prompt = "> "
+				opts.fzf_opts = {
+				  ['--scheme']    = 'path',
+				  ['--tiebreak']  = 'index',
+				  ["--layout"]    = "default",
+				}
+				require'fzf-lua'.files(opts)
+			end)
+			-- use fzf to search buffers as well
+			vim.keymap.set('n', '<leader>;', function()
+				require'fzf-lua'.buffers({
+					-- https://github.com/ibhagwan/fzf-lua/issues/2230#issuecomment-3164258823
+					fzf_opts = {
+					  ["--with-nth"]      = "-1",
+					  ["--header-lines"]  = "false",
+					}
+				})
+			end)
+			
 			vim.api.nvim_create_user_command('Rg', function(arg)
 			  	local preview_window = arg.bang and 'up:60%' or 'right:50%:hidden'
 			  	local source = string.format(
@@ -581,6 +641,11 @@ require("lazy").setup({
 				lspconfig.pyright.setup {}
 			end
 
+			-- texlab for LaTeX
+			if vim.fn.executable('texlab') == 1 then
+				vim.lsp.enable('texlab')
+			end
+
 
 			-- Global mappings.
 			-- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -630,11 +695,9 @@ require("lazy").setup({
 
 					local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
-					-- When https://neovim.io/doc/user/lsp.html#lsp-inlay_hint stabilizes
-					-- *and* there's some way to make it only apply to the current line.
-					-- if client.server_capabilities.inlayHintProvider then
-					--     vim.lsp.inlay_hint(ev.buf, true)
-					-- end
+					if client.server_capabilities.inlayHintProvider then
+					    vim.lsp.inlay_hint(ev.buf, true)
+					end
 
 					-- None of this semantics tokens business.
 					-- https://www.reddit.com/r/neovim/comments/143efmd/is_it_possible_to_disable_treesitter_completely/
@@ -726,16 +789,6 @@ require("lazy").setup({
 			"nvim-treesitter/nvim-treesitter",
 		},
 	},
-	-- rust
-	{
-		'rust-lang/rust.vim',
-		ft = { "rust" },
-		config = function()
-			vim.g.rustfmt_autosave = 1
-			vim.g.rustfmt_emit_files = 1
-			vim.g.rustfmt_fail_silently = 0
-		end
-	},
 	-- go
 	{
 		'fatih/vim-go',
@@ -772,6 +825,15 @@ require("lazy").setup({
 			-- typo
 			vim.spell.spelllang = "en_us"
 
+		end
+	},
+	{
+		"lervag/vimtex",
+		ft = { "tex" },
+		lazy = true,
+		init = function()
+			vim.g.vimtex_view_method = "zathura"
+			vim.g.vimtex_mappings_enabled = false
 		end
 	},
 	-- Format tool

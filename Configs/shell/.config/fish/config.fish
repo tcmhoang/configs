@@ -121,7 +121,6 @@ alias zi=__zoxide_zi
 abbr -a cd z
 abbr -a ci zi
 
-
 fish_add_path /home/tcmhoang/.spicetify
 zoxide init fish | source
 starship init fish | source
@@ -131,14 +130,13 @@ set -g direnv_fish_mode eval_on_arrow # trigger direnv at prompt, and on every a
 set -g direnv_fish_mode eval_after_arrow # trigger direnv at prompt, and only after arrow-based directory changes before executing command
 set -g direnv_fish_mode disable_arrow # trigger direnv at prompt only, this is similar functionality to the original behavior
 
-
 if status --is-interactive
     switch $TERM
         case linux
             :
         case '*'
             if ! set -q TMUX
-                exec tmux
+                exec tmux set-option -g default-shell (which fish) ';' new-session
             end
     end
 end
@@ -158,7 +156,6 @@ else
     abbr -a ll 'ls -l'
     abbr -a lll 'ls -la'
 end
-
 
 function ssh
     switch $argv[1]
@@ -214,7 +211,6 @@ end
 function limit
     numactl -C 0,1,2 $argv
 end
-
 
 # Type - to move up to top parent dir which is a repository
 function d
@@ -272,8 +268,6 @@ function fish_user_key_bindings
     bind \etq fzf_todoist_quick_add
 end
 
-
-
 function fish_greeting
     echo
     echo -e (uname -ro | awk '{print " \\\\e[1mOS: \\\\e[0;32m"$0"\\\\e[0m"}')
@@ -289,36 +283,38 @@ function fish_greeting
 	)
     echo
 
-    echo -e " \\e[1mNetwork:\\e[0m"
-    echo
-    # http://tdt.rocks/linux_network_interface_naming.html
-    echo -ne (\
-		ip addr show up scope global | \
-			grep -E ': <|inet' | \
-			sed \
-				-e 's/^[[:digit:]]\+: //' \
-				-e 's/: <.*//' \
-				-e 's/.*inet[[:digit:]]* //' \
-				-e 's/\/.*//'| \
-			awk 'BEGIN {i=""} /\.|:/ {print i" "$0"\\\n"; next} // {i = $0}' | \
-			sort | \
-			column -t -R1 | \
-			# public addresses are underlined for visibility \
-			sed 's/ \([^ ]\+\)$/ \\\e[4m\1/' | \
-			# private addresses are not \
-			sed 's/m\(\(10\.\|172\.\(1[6-9]\|2[0-9]\|3[01]\)\|192\.168\.\).*\)/m\\\e[24m\1/' | \
-			# unknown interfaces are cyan \
-			sed 's/^\( *[^ ]\+\)/\\\e[36m\1/' | \
-			# ethernet interfaces are normal \
-			sed 's/\(\(en\|em\|eth\)[^ ]* .*\)/\\\e[39m\1/' | \
-			# wireless interfaces are purple \
-			sed 's/\(wl[^ ]* .*\)/\\\e[35m\1/' | \
-			# wwan interfaces are yellow \
-			sed 's/\(ww[^ ]* .*\).*/\\\e[33m\1/' | \
-			sed 's/$/\\\e[0m/' | \
-			sed 's/^/\t/' \
-		)
-    echo
+    if command -q ip
+        echo -e " \\e[1mNetwork:\\e[0m"
+        echo
+        # http://tdt.rocks/linux_network_interface_naming.html
+        echo -ne (\
+			ip addr show up scope global | \
+				grep -E ': <|inet' | \
+				sed \
+					-e 's/^[[:digit:]]\+: //' \
+					-e 's/: <.*//' \
+					-e 's/.*inet[[:digit:]]* //' \
+					-e 's/\/.*//'| \
+				awk 'BEGIN {i=""} /\.|:/ {print i" "$0"\\\n"; next} // {i = $0}' | \
+				sort | \
+				column -t -R1 | \
+				# public addresses are underlined for visibility \
+				sed 's/ \([^ ]\+\)$/ \\\e[4m\1/' | \
+				# private addresses are not \
+				sed 's/m\(\(10\.\|172\.\(1[6-9]\|2[0-9]\|3[01]\)\|192\.168\.\).*\)/m\\\e[24m\1/' | \
+				# unknown interfaces are cyan \
+				sed 's/^\( *[^ ]\+\)/\\\e[36m\1/' | \
+				# ethernet interfaces are normal \
+				sed 's/\(\(en\|em\|eth\)[^ ]* .*\)/\\\e[39m\1/' | \
+				# wireless interfaces are purple \
+				sed 's/\(wl[^ ]* .*\)/\\\e[35m\1/' | \
+				# wwan interfaces are yellow \
+				sed 's/\(ww[^ ]* .*\).*/\\\e[33m\1/' | \
+				sed 's/$/\\\e[0m/' | \
+				sed 's/^/\t/' \
+			)
+        echo
+    end
 
     set r (random 0 100)
     if [ $r -lt 5 ] # only occasionally show backlog (5%)
