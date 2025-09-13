@@ -50,8 +50,6 @@
               allowUnfree = true;
               allowUnfreePredicate = _: true;
             };
-
-            nixGL.packages = nixgl.packages;
           }
 
           ./home.nix
