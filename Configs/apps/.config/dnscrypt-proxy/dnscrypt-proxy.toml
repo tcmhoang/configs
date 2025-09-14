@@ -1,4 +1,3 @@
-# Empty listen_addresses to use systemd socket activation
 listen_addresses = ['127.0.0.1:53', '[::1]:53']
 
 ipv6_servers = false
@@ -7,10 +6,10 @@ dnscrypt_servers = true
 doh_servers = false
 odoh_servers = false
 require_dnssec = false
-require_nolog = true
+require_nolog = false
 require_nofilter = true
 server_names = []
-disabled_server_names = ['dnscry.pt-tokyo-ipv4', 'dnscry.pt-tokyo-ipv6', 'dnscry.pt-tokyo02-ipv4', 'dnscry.pt-tokyo02-ipv6', 'iij', 'saldns01-conoha-ipv4', 'saldns02-conoha-ipv4', 'saldns03-conoha-ipv4','cs-tokyo', 'dnscry.pt-hongkong-ipv4', 'dnscry.pt-hongkong-ipv6', 'cs-sydney']
+disabled_server_names = ['dnscry.pt-tokyo-ipv4', 'dnscry.pt-tokyo-ipv6', 'dnscry.pt-tokyo02-ipv4', 'dnscry.pt-tokyo02-ipv6', 'saldns01-conoha-ipv4', 'saldns02-conoha-ipv4', 'saldns03-conoha-ipv4','cs-tokyo', 'dnscry.pt-hongkong-ipv4', 'dnscry.pt-hongkong-ipv6', 'cs-sydney']
 
 cache=true
 cache_size = 4096
@@ -18,6 +17,39 @@ cache_min_ttl = 2400
 cache_max_ttl = 86400
 cache_neg_min_ttl = 60
 cache_neg_max_ttl = 600
+
+
+ignore_system_dns = true
+http3 = true
+
+bootstrap_resolvers = ['9.9.9.11:53', '1.1.1.1:53']
+netprobe_address = '9.9.9.9:53'
+
+
+## Add EDNS-client-subnet information to outgoing queries
+##
+## Multiple networks can be listed; they will be randomly chosen.
+## These networks don't have to match your actual networks.
+
+# edns_client_subnet = ['0.0.0.0/0', '2001:db8::/32']
+
+## Immediately respond to A and AAAA queries for host names without a domain name
+## This also prevents "dotless domain names" from being resolved upstream.
+
+block_unqualified = true
+
+
+## Immediately respond to queries for local zones instead of leaking them to
+## upstream resolvers (always causing errors or timeouts).
+
+block_undelegated = true
+
+
+## TTL for synthetic responses sent when a request has been blocked (due to
+## IPv6 or blocklists).
+
+reject_ttl = 10
+
 
 [query_log]
   file = '/var/log/dnscrypt-proxy/query.log'
@@ -56,6 +88,44 @@ cache_neg_max_ttl = 600
   minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
   cache_file = 'opennic.md'
 
+## dnscry.pt servers - See https://www.dnscry.pt
+  [sources.dnscry-pt-resolvers]
+    urls = ["https://www.dnscry.pt/resolvers.md"]
+    minisign_key = "RWQM31Nwkqh01x88SvrBL8djp1NH56Rb4mKLHz16K7qsXgEomnDv6ziQ"
+    cache_file = '/var/lib/dnscrypt-proxy/dnscry.pt-resolvers.md'
+    refresh_delay = 73
+    prefix = "dnscry.pt-"
+
+
+
+[broken_implementations]
+
+## Cisco servers currently cannot handle queries larger than 1472 bytes, and don't
+## truncate responses larger than questions as expected by the DNSCrypt protocol.
+## This prevents large responses from being received over UDP and over relays.
+##
+## Older versions of the `dnsdist` server software had a bug with queries larger
+## than 1500 bytes. This is fixed since `dnsdist` version 1.5.0, but
+## some server may still run an outdated version.
+##
+## The list below enables workarounds to make non-relayed usage more reliable
+## until the servers are fixed.
+
+fragments_blocked = [
+  'cisco',
+  'cisco-ipv6',
+  'cisco-familyshield',
+  'cisco-familyshield-ipv6',
+  'cisco-sandbox',
+  'cleanbrowsing-adult',
+  'cleanbrowsing-adult-ipv6',
+  'cleanbrowsing-family',
+  'cleanbrowsing-family-ipv6',
+  'cleanbrowsing-security',
+  'cleanbrowsing-security-ipv6',
+]
+
+
 [anonymized_dns]
 
 routes = [
@@ -63,4 +133,30 @@ routes = [
 ]
 
 skip_incompatible = true
+direct_cert_fallback = true
+
+
+[dns64]
+
+## DNS64 is a mechanism for synthesizing AAAA records from A records.
+## It is used with an IPv6/IPv4 translator to enable client-server
+## communication between an IPv6-only client and an IPv4-only server,
+## without requiring any changes to either the IPv6 or the IPv4 node,
+## for the class of applications that work through NATs.
+##
+## There are two options to synthesize such records:
+## Option 1: Using a set of static IPv6 prefixes;
+## Option 2: By discovering the IPv6 prefix from DNS64-enabled resolver.
+##
+## If both options are configured - only static prefixes are used.
+## (Ref. RFC6147, RFC6052, RFC7050)
+##
+## Do not enable unless you know what DNS64 is and why you need it, or else
+## you won't be able to connect to anything at all.
+
+## Static prefix(es) as Pref64::/n CIDRs
+
+ prefix = ['64:ff9b::/96']
+
+
 

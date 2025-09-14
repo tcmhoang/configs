@@ -68,6 +68,7 @@
 
       fusuma
       ydotool
+      xdotool
 
       hunspell
       hunspellDicts.en_US
