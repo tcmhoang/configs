@@ -441,10 +441,9 @@ require("lazy").setup({
 					_fzf_nth_devicons = true,
 				},
 				fzf_opts = {
-					  ["--with-nth"]      = "{-2}",
-					  ["--delimiter"]     = "[ :]",
-					  ["--header-lines"]  = "false",
-
+					  ["--with-nth"]      = "-3,-2",
+					  ["--nth"]           = "-1",
+					  ["--delimiter"]     = "[:\u{2002}]",
 					},
 				header = false,
 			}
