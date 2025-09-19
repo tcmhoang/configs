@@ -441,10 +441,8 @@ require("lazy").setup({
 					_fzf_nth_devicons = true,
 				},
 				fzf_opts = {
-					  ["--with-nth"]      = "-3,-2",
-					  ["--nth"]           = "-1",
-					  ["--delimiter"]     = "[:\u{2002}]",
-					},
+					["--layout"] = "default",
+				},
 				header = false,
 			}
 			vim.keymap.set('', '<C-p>', function()
@@ -469,9 +467,10 @@ require("lazy").setup({
 			-- use fzf to search buffers as well
 			vim.keymap.set('n', '<leader>;', function()
 				require'fzf-lua'.buffers({
-					-- https://github.com/ibhagwan/fzf-lua/issues/2230#issuecomment-3164258823
 					fzf_opts = {
-					  ["--with-nth"]      = "-1",
+					  ["--with-nth"]      = "-3,-2",
+					  ["--nth"]           = "-1",
+					  ["--delimiter"]     = "[:\u{2002}]",
 					  ["--header-lines"]  = "false",
 					}
 				})
@@ -492,13 +491,12 @@ require("lazy").setup({
 		'neovim/nvim-lspconfig',
 		config = function()
 			-- Setup language servers.
-			local lspconfig = require('lspconfig')
+			local lsp = vim.lsp
 			local capabilities = require('cmp_nvim_lsp').default_capabilities()
 			local util = require "lspconfig/util"
 
 			-- Rust
-			lspconfig.rust_analyzer.setup {
-				-- Server-specific settings. See `:help lspconfig-setup`
+			lsp.config('rust_analyzer', {
 				settings = {
 					["rust-analyzer"] = {
 						cargo = {
@@ -516,10 +514,10 @@ require("lazy").setup({
 						},
 					},
 				},
-			}
+			})
 
 			-- Go
-			lspconfig.gopls.setup {
+			lsp.config('gopls', {
 			   cmd = {"gopls", "serve"},
 			   capabilities = capabilities,
 			   filetypes = {"go", "gomod"},
@@ -532,49 +530,49 @@ require("lazy").setup({
 			       staticcheck = true,
 			     },
 			   },
-			 }
+			 })
 
 			-- deno config
 			
-			lspconfig.denols.setup {
+			lsp.config('denols', {
 			  root_dir = util.root_pattern("deno.json", "deno.jsonc"),
 			  capabilites = capabilities,
 			  filetypes = { "javascript",  "typescript"}
-			}
+			})
 			
 
-			for _, lsp in pairs({'ts_ls', 'eslint'}) do
-			  lspconfig[lsp].setup {
+			for _, lsp_val in pairs({'ts_ls', 'eslint'}) do
+			  lsp.config(lsp_val, {
 			    root_dir = function (filename)
 			     local denoRootDir = util.root_pattern("deno.json", "deno.json")(filename);
 			        if denoRootDir then
  			          return nil;
  			        end
- 			      return lspconfig.util.root_pattern("package.json")(filename);
+ 			      return util.root_pattern("package.json")(filename);
  			    end,
 			    capabilites = capabilities,
-			  }
+			  })
 			end
 
 
 			-- Other stuffs
 	
-			lspconfig.astro.setup {
+			lsp.config('astro', {
 			  capabilites = capabilities,
 			   init_options = {
 			    typescript = {
 			      tsdk = vim.fs.normalize('node_modules/typescript/lib')
 			    }
 			  },
-			}
+			})
 			
 
 
 			local servers = {'jsonls', 'svelte', 'html', 'cssls', 'vuels'}
-			for _, lsp in pairs(servers) do
-			  lspconfig[lsp].setup {
+			for _, lsp_val in pairs(servers) do
+			  lsp.config(lsp_val, {
 			    capabilites = capabilities,
-			  }
+			  })
 			end
 
 
@@ -591,7 +589,7 @@ require("lazy").setup({
 				}
 			end
 			if configs.bashls then
-				lspconfig.bashls.setup {}
+				lsp.config('bashls', {})
 			end
 
 			-- Ruff for Python
@@ -610,7 +608,7 @@ require("lazy").setup({
 				}
 			end
 			if configs.ruff then
-				lspconfig.ruff.setup {}
+				lsp.config('ruff', {})
 			end
 
 			if not configs.pyright and vim.fn.executable('pyright') == 1 then
@@ -637,7 +635,7 @@ require("lazy").setup({
 				}
 			end
 			if configs.pyright then
-				lspconfig.pyright.setup {}
+				lsp.config('pyright', {})
 			end
 
 			-- texlab for LaTeX
@@ -713,7 +711,6 @@ require("lazy").setup({
 		-- these dependencies will only be loaded when cmp loads
 		-- dependencies are always lazy-loaded unless specified otherwise
 		dependencies = {
-			'neovim/nvim-lspconfig',
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
