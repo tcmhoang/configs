@@ -17,11 +17,9 @@
     packages = with pkgs; [
       fish
       hblock
-      todoist
       e2fsprogs
       uutils-coreutils-noprefix
       delta
-      direnv
       zoxide
       progress
       fzf
@@ -40,12 +38,19 @@
       feh
       proximity-sort
       tuckr
-      cloudflare-warp
+      ddrescue
+
+      ast-grep
+      treefmt
+      direnv
+      typst
+      semgrep # test
+
+      android-tools
 
       spicetify-cli
       spotify
       signal-desktop
-      element-desktop
       qbittorrent
       livecaptions
       kando
@@ -66,9 +71,7 @@
       gh-dash
       odt2txt
 
-      fusuma
-      ydotool
-      xdotool
+      xdotool # x11 bridge needs it
 
       hunspell
       hunspellDicts.en_US
