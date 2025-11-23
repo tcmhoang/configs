@@ -33,18 +33,24 @@
 	conflictstyle = diff3
 [alias]
 	c = commit
+	co = checkout
+	br = branch
 	s = status
 	st = status
+	unstage = reset HEAD --
 	lg = log --oneline
 	last = log -1 HEAD
-	cl = log -p -- ':(exclude)Cargo.lock'
+	cl = log -p
 	f = push --force-with-lease
+	ix = diff --cached
+	url =! bash -c 'git config --get remote.origin.url | sed -E "s/.+:\\(.+\\)\\.git$/https:\\\\/\\\\/github\\\\.com\\\\/\\\\1/g"'
 	# https://stackoverflow.com/a/11688523/472927
 	ss = "!f() { git stash show stash^{/$*} -p; }; f"
 	sa = "!f() { git stash apply stash^{/$*}; }; f"
 	sl = stash list
 [pull]
 	ff = only
+	rebase = false
 [push]
 	default = simple
 [help]
