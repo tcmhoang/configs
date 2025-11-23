@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the classes you want to exclude
-excluded_classes=("plasmashell" "kwin" "dolphin" "konsole" "vlc" "firefox" "Chromium-browser" "kscreenlocker" "Brave-browser")
+excluded_classes=("plasmashell" "kwin" "dolphin" "konsole" "VirtualBox Machine" "vlc" "firefox" "Chromium-browser" "kscreenlocker" "Brave-browser", "Rustdesk", "yakuake")
 
 # Define the window types you want to include to not be blurred
 #you can remove "_NET_WM_WINDOW_TYPE_MENU" from this list if you also want blurring behind menus (context menus etc...)
