@@ -27,7 +27,7 @@
       tmux
       ripgrep
       tealdeer
-      aria
+      aria2
       ouch
       bat
       mdcat
@@ -52,6 +52,7 @@
       spotify
       signal-desktop
       qbittorrent
+      amule
       livecaptions
       kando
 
@@ -59,6 +60,11 @@
       neovim
 
       jetbrains.idea-community-bin
+      R
+      rstudio
+
+      gemini-cli-bin
+      geminicommit
 
       qemu
       virtiofsd
