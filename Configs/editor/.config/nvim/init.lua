@@ -133,7 +133,7 @@ vim.keymap.set('n', '<C-h>', '<cmd>nohlsearch<cr>')
 -- Jump to start and end of line using the home row keys
 vim.keymap.set('', 'H', '^')
 vim.keymap.set('', 'L', '$')
--- Neat X clipboard integration
+-- Neat clipboard integration
 -- <leader>p will paste clipboard into buffer
 -- <leader>c will copy entire buffer into clipboard
 vim.keymap.set('n', '<leader>p', '<cmd>read !wl-paste<cr>')
@@ -780,6 +780,20 @@ require("lazy").setup({
 			})
 		end
 	},
+	-- dont load additional hightlight rules
+	{
+		"nvim-treesitter/nvim-treesitter",
+		config = function() 
+    		    require("nvim-treesitter.configs").setup({
+    		        ensure_installed = { "lua", "vim" },
+    		        
+    		        highlight = {
+    		            enable = true,
+    		            additional_vim_regex_highlighting = false,
+    		        },
+    		    })
+    		end,
+	},
 	-- language support
 	-- terraform
 	{
@@ -817,25 +831,30 @@ require("lazy").setup({
 	},
 	-- markdown
 	{
-		'plasticboy/vim-markdown',
-		ft = { "markdown" },
-		dependencies = {
-			'godlygeek/tabular',
+		'MeanderingProgrammer/render-markdown.nvim',
+    		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },
+    		opts = {
+			completions = { lsp = { enabled = true } },
 		},
-		config = function()
-			-- never ever fold!
-			vim.g.vim_markdown_folding_disabled = 1
-			-- support front-matter in .md files
-			vim.g.vim_markdown_frontmatter = 1
-			-- 'o' on a list item should insert at same level
-			vim.g.vim_markdown_new_list_item_indent = 0
-			-- don't add bullets when wrapping:
-			-- https://github.com/preservim/vim-markdown/issues/232
-			vim.g.vim_markdown_auto_insert_bullets = 0
-			-- typo
-			vim.spell.spelllang = "en_us"
+		config = function(_, opts)
+		    require('render-markdown').setup(opts)
 
-		end
+    		    vim.api.nvim_create_autocmd("FileType", {
+    		        pattern = "markdown",
+    		        callback = function()
+			    -- never ever fold!
+    		            vim.opt_local.foldenable = false
+    		            
+    		            -- Local spellcheck
+    		            vim.opt_local.spell = true
+    		            vim.opt_local.spelllang = "en_us"
+    		            
+			    -- don't add bullets when wrapping:
+    		            vim.opt_local.formatoptions:remove('r') 
+    		            vim.opt_local.formatoptions:remove('o') 
+    		        end,
+    		    })
+    		end
 	},
 	{
 		"lervag/vimtex",
