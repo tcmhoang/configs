@@ -51,10 +51,11 @@
       spicetify-cli
       spotify
       signal-desktop
-      qbittorrent
-      amule
       livecaptions
       kando
+
+      qbittorrent
+      amule
 
       emacs
       neovim
@@ -62,6 +63,9 @@
       jetbrains.idea-community-bin
       R
       rstudio
+
+      rustc
+      cargo
 
       gemini-cli-bin
       geminicommit
@@ -77,17 +81,18 @@
       gh-dash
       odt2txt
 
+      makemkv
+
       xdotool # x11 bridge needs it
 
       hunspell
       hunspellDicts.en_US
     ];
-    stateVersion = "25.05";
+    stateVersion = "25.11";
   };
 
   systemd.user.startServices = "sd-switch";
   services.podman.enable = true;
-  services.fusuma.extraPackages = with pkgs; [coreutils ydotool];
 
   programs.home-manager.enable = true;
 }
