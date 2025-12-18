@@ -26,6 +26,7 @@
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
+      overlays = [(import ./overlays/r_studio.nix)];
       config = {
         allowUnfree = true;
         allowUnfreePredicate = _: true;
@@ -44,11 +45,6 @@
             nix = {
               package = pkgs.nix;
               settings.experimental-features = ["nix-command" "flakes"];
-            };
-
-            nixpkgs.config = {
-              allowUnfree = true;
-              allowUnfreePredicate = _: true;
             };
           }
 
