@@ -61,8 +61,10 @@
       neovim
 
       jetbrains.idea-community-bin
+
       R
-      rstudio
+      cmake
+      r_studio
 
       rustc
       cargo
