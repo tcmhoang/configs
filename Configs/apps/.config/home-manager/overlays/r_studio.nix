@@ -13,14 +13,17 @@ self: super: {
       coin
       emmeans
       ez
+      PMCMRplus
       fitdistrplus
       lme4
       lmerTest
       multcomp
       nnet
       phia
+      purrr
       plyr
       reshape2
+      skimr
     ];
   };
 }
