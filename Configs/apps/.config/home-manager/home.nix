@@ -2,9 +2,41 @@
   config,
   pkgs,
   osConfig,
-  nixgl,
   ...
-}: {
+}: let
+  gpu = with pkgs;
+    map config.lib.nixGL.wrap [
+      feh
+
+      spotify
+      signal-desktop
+
+      makemkv
+      sioyek
+      kando
+
+      jetbrains.idea-oss
+      r_studio
+
+      qbittorrent
+      amule
+      nicotine-plus
+    ];
+
+  dgpu =  with pkgs;
+    map config.lib.nixGL.wrapOffload [
+    qemu
+
+    livecaptions
+  ];
+in {
+  targets.genericLinux.nixGL = {
+    packages = pkgs.nixgl;
+    defaultWrapper = "mesa";
+    offloadWrapper = "nvidiaPrime";
+    installScripts = ["mesa" "nvidiaPrime"];
+  };
+
   home = {
     username = "tcmhoang";
     homeDirectory = "/home/tcmhoang";
@@ -12,84 +44,69 @@
       EDITOR = "nvim";
     };
 
-    enableNixpkgsReleaseCheck = false;
+    packages = with pkgs;
+      [
+        fish
+        hblock
+        e2fsprogs
+        uutils-coreutils-noprefix
+        delta
+        zoxide
+        progress
+        fzf
+        starship
+        tmux
+        ripgrep
+        tealdeer
+        aria2
+        ouch
+        bat
+        glow
+        fd
+        eza
+        license-generator
+        topgrade
+        proximity-sort
+        tuckr
+        ddrescue
 
-    packages = with pkgs; [
-      fish
-      hblock
-      e2fsprogs
-      uutils-coreutils-noprefix
-      delta
-      zoxide
-      progress
-      fzf
-      starship
-      tmux
-      ripgrep
-      tealdeer
-      aria2
-      ouch
-      bat
-      mdcat
-      fd
-      eza
-      license-generator
-      topgrade
-      feh
-      proximity-sort
-      tuckr
-      ddrescue
+        ast-grep
+        treefmt
+        direnv
+        typst
+        semgrep # test
 
-      ast-grep
-      treefmt
-      direnv
-      typst
-      semgrep # test
+        android-tools
 
-      android-tools
+        spicetify-cli
 
-      spicetify-cli
-      spotify
-      signal-desktop
-      livecaptions
-      kando
+        emacs
+        neovim
 
-      qbittorrent
-      amule
+        R
+        cmake
+        rustc
+        cargo
 
-      emacs
-      neovim
+        gemini-cli-bin
+        geminicommit
 
-      jetbrains.idea-community-bin
+        virtiofsd
+        podman-compose
 
-      R
-      cmake
-      r_studio
+        git
+        git-ignore
+        git-lfs
+        gh
+        gh-dash
+        odt2txt
 
-      rustc
-      cargo
+        xdotool # x11 bridge needs it
 
-      gemini-cli-bin
-      geminicommit
-
-      qemu
-      virtiofsd
-      podman-compose
-
-      git
-      git-ignore
-      git-lfs
-      gh
-      gh-dash
-      odt2txt
-
-      makemkv
-
-      xdotool # x11 bridge needs it
-
-      hunspell
-      hunspellDicts.en_US
-    ];
+        hunspell
+        hunspellDicts.en_US
+      ]
+      ++ gpu ++ dgpu;
     stateVersion = "25.11";
   };
 
