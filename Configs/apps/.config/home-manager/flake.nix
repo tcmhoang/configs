@@ -26,20 +26,27 @@
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
-      overlays = [(import ./overlays/r_studio.nix)];
+      overlays = [
+        inputs.nixgl.overlay
+        (import ./overlays/r_studio.nix)
+      ];
       config = {
         allowUnfree = true;
         allowUnfreePredicate = _: true;
       };
     };
   in {
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
-    home-manager.useGlobalPkgs = true;
-    home-manager.useUserPackages = true;
+    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
+
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+    };
+
     homeConfigurations = {
       "tcmhoang" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = {inherit inputs outputs pkgs nixgl;};
+        extraSpecialArgs = {inherit inputs;};
         modules = [
           {
             nix = {
