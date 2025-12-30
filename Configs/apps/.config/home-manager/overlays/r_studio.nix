@@ -14,10 +14,14 @@ self: super: {
       nnet
       ordinal
       MASS
+      glmmTMB
+      multpois
 
+      afex
       car
       ez
       emmeans
+      chisq.posthoc.test
       multcomp
       phia
 
@@ -30,6 +34,11 @@ self: super: {
       ggplot2
       RCurl
       fitdistrplus
+      performance
+      effectsize
+      MuMIn
+      EnvStats
+      rcompanion
       nortest
       skimr
     ];
