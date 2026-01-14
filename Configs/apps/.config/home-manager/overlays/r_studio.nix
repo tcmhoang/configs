@@ -21,7 +21,7 @@ self: super: {
       car
       ez
       emmeans
-      chisq.posthoc.test
+      chisq_posthoc_test
       multcomp
       phia
 

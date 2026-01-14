@@ -145,10 +145,10 @@ disable = ["spicetify"]
 
 nix_arguments = "--impure --flake"
 
-# nix_env_arguments = "--prebuilt-only"
+nix_env_arguments = "--prebuilt-only"
 
 # Extra Home Manager arguments
-# home_manager_arguments = ["switch"]
+home_manager_arguments = ["--impure"]
 
 
 [git]
