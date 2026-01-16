@@ -32,7 +32,6 @@ self: super: {
       RVAideMemoire
 
       ggplot2
-      RCurl
       fitdistrplus
       performance
       effectsize

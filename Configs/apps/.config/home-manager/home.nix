@@ -23,12 +23,12 @@
       nicotine-plus
     ];
 
-  dgpu =  with pkgs;
+  dgpu = with pkgs;
     map config.lib.nixGL.wrapOffload [
-    qemu
+      qemu
 
-    livecaptions
-  ];
+      livecaptions
+    ];
 in {
   targets.genericLinux.nixGL = {
     packages = pkgs.nixgl;
@@ -84,9 +84,6 @@ in {
         neovim
 
         R
-        cmake
-        rustc
-        cargo
 
         gemini-cli-bin
         geminicommit

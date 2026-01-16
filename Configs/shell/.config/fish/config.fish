@@ -248,23 +248,6 @@ setenv FZF_DEFAULT_OPTS "--height 20% \
 
 setenv EDITOR nvim
 
-alias todoist-cli=todoist
-function fish_user_key_bindings
-    bind \cz 'fg>/dev/null ^/dev/null'
-    if functions -q fzf_key_bindings
-        fzf_key_bindings
-    end
-
-    bind \eti fzf_todoist_item
-    bind \etp fzf_todoist_project
-    bind \etl fzf_todoist_labels
-    bind \etc fzf_todoist_close
-    bind \etd fzf_todoist_delete
-    bind \eto fzf_todoist_open
-    bind \ett fzf_todoist_date
-    bind \etq fzf_todoist_quick_add
-end
-
 function fish_greeting
     echo
     echo -e (uname -ro | awk '{print " \\\\e[1mOS: \\\\e[0;32m"$0"\\\\e[0m"}')
