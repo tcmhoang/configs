@@ -20,6 +20,7 @@
 
       jetbrains.idea-oss
       r_studio
+      emacs
 
       qbittorrent
       nicotine-plus
@@ -81,7 +82,6 @@ in {
 
         spicetify-cli
 
-        emacs
         neovim
 
         R
