@@ -75,6 +75,7 @@ in {
         direnv
         typst
         semgrep # test
+	shellcheck-minimal
 
         android-tools
 
