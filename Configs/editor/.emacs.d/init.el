@@ -49,9 +49,6 @@
   (when (file-exists-p local-lib)
     (add-to-list 'load-path local-lib)))
 
-(use-package ef-themes
-  :config (load-theme 'ef-light t)) ;; Pick your preferred default
-
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -64,7 +61,8 @@
   :config (which-key-mode))
 
 (use-package catppuccin-theme
-  :config (load-theme 'catppuccin :no-confirm)) ;; Pick your preferred default
+  :init (setq catppuccin-flavor 'mocha) 
+  :config (load-theme 'catppuccin t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TOOLS
