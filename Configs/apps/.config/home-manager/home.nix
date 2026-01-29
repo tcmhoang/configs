@@ -95,6 +95,7 @@ in {
         git
         git-ignore
         git-lfs
+	git-filter-repo
         gh
         gh-dash
         odt2txt
