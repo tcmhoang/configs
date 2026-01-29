@@ -8,10 +8,13 @@
     map config.lib.nixGL.wrap [
       feh
 
+      livecaptions
+
       spotify
       signal-desktop
 
       makemkv
+
       sioyek
       kando
 
@@ -19,15 +22,12 @@
       r_studio
 
       qbittorrent
-      amule
       nicotine-plus
     ];
 
   dgpu = with pkgs;
     map config.lib.nixGL.wrapOffload [
       qemu
-
-      livecaptions
     ];
 in {
   targets.genericLinux.nixGL = {
