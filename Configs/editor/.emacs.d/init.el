@@ -80,7 +80,7 @@
 (use-package yasnippet
   :config
   (yas-global-mode 1)
-  (setq yas-prompt-functions '(yas-dropdown-prompt yas-ido-prompt))
+  (setq yas-prompt-functions '(yas-dropdown-prompt))
   :bind (:map yas-minor-mode-map
          ("TAB" . nil)
          ("<tab>" . nil)
@@ -128,8 +128,7 @@
 
 (use-package lsp-mode
   :hook ((haskell-mode . lsp)
-         (haskell-literate-mode . lsp)
-         (swarm-mode . lsp))
+         (haskell-literate-mode . lsp))
   :commands lsp
   :custom
   (lsp-haskell-formatting-provider "fourmolu"))
@@ -141,9 +140,6 @@
 (use-package markdown-mode
   :mode (("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
-
-(use-package poly-markdown
-  :ensure polymode)
 
 (use-package auctex
   :defer t
@@ -192,7 +188,6 @@
 
 ;; Dependencies 
 (use-package haskell-snippets)
-(use-package anaphora)
 (use-package request)
 (use-package gnu-elpa-keyring-update) 
 
