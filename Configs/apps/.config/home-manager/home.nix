@@ -20,6 +20,7 @@
 
       jetbrains.idea-oss
       r_studio
+      jupyter
       emacs
 
       qbittorrent
@@ -98,7 +99,6 @@ in {
 	git-filter-repo
         gh
         gh-dash
-        odt2txt
 	haskellPackages.ods2csv
 
         xdotool # x11 bridge needs it
