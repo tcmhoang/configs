@@ -68,8 +68,6 @@
 
 [protocol]
 	version = 2
-[diff "odf"]
-	textconv = odt2txt
 [diff "ods"]
 	textconv = ods2csv
 [init]

@@ -508,7 +508,7 @@ require("lazy").setup({
 			local lsp = vim.lsp
 			local capabilities = require('cmp_nvim_lsp').default_capabilities()
 			local util = require "lspconfig/util"
-
+			
 			-- Rust
 			lsp.config('rust_analyzer', {
 				settings = {
@@ -593,40 +593,19 @@ require("lazy").setup({
 		
 			-- Bash LSP
 			local configs = require 'lspconfig.configs'
-			if not configs.bashls and vim.fn.executable('bash-language-server') == 1 then
-				configs.bashls = {
-					default_config = {
-						cmd = { 'bash-language-server', 'start' },
-						filetypes = { 'sh' },
-						root_dir = util.find_git_ancestor,
-					}
-				}
+
+			if vim.fn.executable('bash-language-server') == 1 then
+				vim.lsp.enable('bashls')
 			end
-			if configs.bashls then
-				lsp.config('bashls', {})
+			
+			
+			-- Python LSP
+			if vim.fn.executable('ruff') == 1 then
+				lsp.enable('ruff')
 			end
 
-			-- Ruff for Python
-			if not configs.ruff and vim.fn.executable('ruff') == 1 then
-				configs.ruff = {
-					default_config = {
-						cmd = { 'ruff', "server" },
-						filetypes = { 'python' },
-						root_dir = util.find_git_ancestor,
-						init_options = {
-							settings = {
-								args = {}
-							}
-						}
-					}
-				}
-			end
-			if configs.ruff then
-				lsp.config('ruff', {})
-			end
-
-			if not configs.pyright and vim.fn.executable('pyright') == 1 then
-				configs.pyright = {
+			if vim.fn.executable( 'pyright') == 1 then
+				lsp.config('pyright', {
 					default_config = {
 						cmd = { 'pyright-langserver', "--stdio" },
 						filetypes = { 'python' },
@@ -646,15 +625,13 @@ require("lazy").setup({
 							}
 						}
 					}
-				}
-			end
-			if configs.pyright then
-				lsp.config('pyright', {})
+				})
+				lsp.enable('pyright')
 			end
 
 			-- texlab for LaTeX
 			if vim.fn.executable('texlab') == 1 then
-				vim.lsp.enable('texlab')
+				lsp.enable('texlab')
 			end
 
 
@@ -832,6 +809,7 @@ require("lazy").setup({
 	-- markdown
 	{
 		'MeanderingProgrammer/render-markdown.nvim',
+		ft = { "md" },
     		dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },
     		opts = {
 			completions = { lsp = { enabled = true } },
