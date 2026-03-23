@@ -437,7 +437,8 @@ require("lazy").setup({
 		'ibhagwan/fzf-lua',
 		config = function()
 			-- stop putting a giant window over my editor
-			require("fzf-lua").setup{
+			local fzf = require("fzf-lua")
+			fzf.setup{
 				winopts = {
 					split = "belowright 10new",
 					preview = {
@@ -491,12 +492,28 @@ require("lazy").setup({
 			end)
 			
 			vim.api.nvim_create_user_command('Rg', function(arg)
-			  	local preview_window = arg.bang and 'up:60%' or 'right:50%:hidden'
+				local preview_opts = arg.bang 
+					and { layout = 'vertical', vertical = 'up:60%' } 
+    					or  { layout = 'horizontal', horizontal = 'right:50%', hidden = 'hidden' }
 			  	local source = string.format(
 			  	    'rg --column --line-number --no-heading --color=always %s',
 			  	    vim.fn.shellescape(arg.args)
 			  	)
-			  	vim.fn['fzf#vim#grep'](source, vim.fn['fzf#vim#with_preview'](preview_window), arg.bang)
+				fzf.fzf_exec(source, {
+				    actions = fzf.defaults.actions.files,
+				    winopts = {
+				        fullscreen = arg.bang == 1,
+					height = 0.20,
+					width  = 1.00,
+            				row    = 1,
+				        preview = preview_opts
+				    },
+				    fzf_opts = {
+					    ['--bind'] = '?:toggle-preview',
+					    ['--delimiter'] = ':',
+					    ['--preview-window'] = '+{2}-/2', -- magic center w/ offsets
+        				}
+				})
 			end, { nargs = '*', bang = true })
 		end
 	},
