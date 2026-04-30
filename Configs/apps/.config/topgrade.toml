@@ -148,7 +148,7 @@ nix_arguments = "--impure --flake"
 nix_env_arguments = "--prebuilt-only"
 
 # Extra Home Manager arguments
-home_manager_arguments = ["--impure"]
+# home_manager_arguments = ["--impure"]
 
 
 [git]
@@ -214,7 +214,7 @@ repos = [
 
 [firmware]
 # Offer to update firmware; if false just check for and display available updates
-# upgrade = true
+upgrade = true
 
 
 [vagrant]
