@@ -6,34 +6,14 @@
 }: let
   gpu = with pkgs;
     map config.lib.nixGL.wrap [
-      feh
-
-      livecaptions
-
       spotify
       signal-desktop
 
-      makemkv
-
-      sioyek
       kando
-
-      jetbrains.idea-oss
-      r_studio
-      jupyter
-      emacs
-
-      qbittorrent
-      nicotine-plus
-    ];
-
-  dgpu = with pkgs;
-    map config.lib.nixGL.wrapOffload [
-      qemu
     ];
 in {
   targets.genericLinux.nixGL = {
-    packages = pkgs.nixgl;
+    packages = pkgs.hardcodedNixGL;
     defaultWrapper = "mesa";
     offloadWrapper = "nvidiaPrime";
     installScripts = ["mesa" "nvidiaPrime"];
@@ -51,7 +31,6 @@ in {
         fish
         hblock
         e2fsprogs
-        uutils-coreutils-noprefix
         delta
         zoxide
         progress
@@ -71,42 +50,53 @@ in {
         proximity-sort
         tuckr
         ddrescue
+        feh
 
         ast-grep
         treefmt
         direnv
         typst
-        semgrep # test
-	shellcheck-minimal
+        semgrep
+        shellcheck-minimal
 
         android-tools
 
         spicetify-cli
 
+        emacs
         neovim
+        jetbrains.idea-oss
+        r_studio
+        jupyter
 
         R
 
-        gemini-cli-bin
-        geminicommit
-
         virtiofsd
         podman-compose
+        qemu
 
         git
         git-ignore
         git-lfs
-	git-filter-repo
+        git-filter-repo
         gh
         gh-dash
-	haskellPackages.ods2csv
+        haskellPackages.ods2csv
 
         xdotool # x11 bridge needs it
 
         hunspell
         hunspellDicts.en_US
+
+        qbittorrent
+        nicotine-plus
+
+        sioyek
+
+        livecaptions
+        makemkv
       ]
-      ++ gpu ++ dgpu;
+      ++ gpu;
     stateVersion = "25.11";
   };
 

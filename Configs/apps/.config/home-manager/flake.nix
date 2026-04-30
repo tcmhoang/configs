@@ -23,11 +23,11 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
-    system = "x86_64-linux";
+    stdenv.hostPlatform.system = "x86_64-linux";
     pkgs = import nixpkgs {
-      inherit system;
+      inherit (stdenv.hostPlatform) system;
       overlays = [
-        inputs.nixgl.overlay
+        (import ./overlays/nixgl.nix inputs)
         (import ./overlays/r_studio.nix)
       ];
       config = {
@@ -36,7 +36,7 @@
       };
     };
   in {
-    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
+    formatter.${stdenv.hostPlatform.system} = nixpkgs.legacyPackages.${stdenv.hostPlatform.system}.alejandra;
 
     home-manager = {
       useGlobalPkgs = true;
