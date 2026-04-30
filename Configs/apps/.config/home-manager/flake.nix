@@ -4,11 +4,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixgl = {
-      url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -18,7 +13,6 @@
   outputs = {
     self,
     home-manager,
-    nixgl,
     nixpkgs,
     ...
   } @ inputs: let
@@ -27,7 +21,6 @@
     pkgs = import nixpkgs {
       inherit (stdenv.hostPlatform) system;
       overlays = [
-        (import ./overlays/nixgl.nix inputs)
         (import ./overlays/r_studio.nix)
       ];
       config = {
