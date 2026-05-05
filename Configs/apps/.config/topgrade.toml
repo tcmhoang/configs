@@ -143,16 +143,16 @@ disable = ["spicetify"]
 
 # rpm_ostree = false
 
-nix_arguments = "--impure --flake"
+nix_arguments = "--flake"
 
 nix_env_arguments = "--prebuilt-only"
 
 # Extra Home Manager arguments
-home_manager_arguments = ["--option fallback false"]
+home_manager_arguments = ["--option", "fallback", "false"]
 
 
 [git]
-max_concurrency = 5
+max_concurrency = 8
 
 # Git repositories that you want to pull and push
 repos = [
@@ -214,7 +214,7 @@ repos = [
 
 [firmware]
 # Offer to update firmware; if false just check for and display available updates
-upgrade = true
+# upgrade = true
 
 
 [vagrant]
